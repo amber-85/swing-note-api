@@ -15,15 +15,15 @@ const getNotes= (req,res)=>{
 
 
 // GET /api/notes/:id fetch a single note for the loggedin user
-const getNoteById=(req,res)=>{
-    const {id}=req.params;
-    if (!id) return res.status(400).json({message:"Note Id is required"});
-    notesDb.findOne({_id:id, userId:req.userId}, (err,note)=>{
-        if (err) return res.status(500).json({message:"Server error"});
-        if (!note) return res.status(404).json({message:"Note not found"});
-        res.status(200).json({note});
-    })
-}
+// const getNoteById=(req,res)=>{
+//     const {id}=req.params;
+//     if (!id) return res.status(400).json({message:"Note Id is required"});
+//     notesDb.findOne({_id:id, userId:req.userId}, (err,note)=>{
+//         if (err) return res.status(500).json({message:"Server error"});
+//         if (!note) return res.status(404).json({message:"Note not found"});
+//         res.status(200).json({note});
+//     })
+// }
 
 
 
@@ -71,10 +71,14 @@ const updateNote=(req,res)=>{
         {$set:{title, text, modifiedAt: new Date()}},
         {},
         (err, numUpdated)=>{
-            if (err) return res.status(500).json({message:"server error"});
-            if (numUpdated===0)
-                if (err) return res.status(404).json({message:"Note not found"});
-                res.status(200).json({message:"Note updated successfully"});  
+            if (err) {
+                return res.status(500).json({message:"server error"});
+            }
+
+            if (numUpdated===0){
+                if (err) return res.status(404).json({message:"Note not found or no changes made"});
+            }
+            res.status(200).json({message:"Note updated successfully"});  
         }
     );
     //check if note is updated
@@ -90,8 +94,12 @@ const deleteNote=(req, res)=>{
     if (!id) return res.status(400).json({message:"Note ID is required"});
 
     notesDb.remove({_id:id, userId:req.userId}, {}, (err, numRemoved)=>{
-        if (err) return res.status(500).json({message:"Server error"});
-        if (numRemoved===0) return res.status(404).json({message:"Note not found"});
+        if (err) {
+            return res.status(500).json({message:"Server error"});
+        }
+        if (numRemoved===0) {
+            return res.status(404).json({message:"Note not found"});
+        }
         res.status(200).json({message:" Note deleted successfully"});
     });
 };
@@ -106,4 +114,4 @@ const deleteNote=(req, res)=>{
 //     });
 // };
 
-export default {getNotes, getNoteById, createNote, updateNote, deleteNote}
+export default {getNotes, createNote, updateNote, deleteNote}

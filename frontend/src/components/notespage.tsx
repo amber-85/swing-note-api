@@ -23,17 +23,7 @@ const NotesPage=({token, onLogout}:NotePageProps)=>{
     const [message, setMessage]=useState("");
 
 
- 
-    //fetch notes from server 
-    // useEffect(()=>{
-    //     fetch("http://localhost:8091/api/notes",{
-    //         method:"GET",
-    //         headers:{Authorization:`Bearer ${token}`}
-    //     })
-    //     .then(res=>res.json())
-    //     .then(data=>setNotes(data))
-    //     .catch(err=>console.error("failed to fetch notes:",err));
-    // },[token]);
+
 
 //fetch notes from server
     const fetchNotes=async ()=>{
